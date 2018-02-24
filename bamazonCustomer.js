@@ -15,20 +15,16 @@ const connection = mysql.createConnection({
 });
 
 var itemNum = 0;
-var items = [];
 
 connection.connect(function(err){
 	if (err) {
 		console.log(err);
 	} else {
-		connection.query('SELECT item_id, product_name, department_name, price, stock_quantity FROM products', function (err, data) {
+		connection.query('SELECT item_id FROM products', function (err, data) {
 			if (err) {
 				console.log(err);
 			} else {
 				itemNum = data.length;
-				for (var i = 0; i < data.length; i++) {
-					items.push(data[i]);
-				}
 				list_item();
 			}
 		});
@@ -36,10 +32,16 @@ connection.connect(function(err){
 });
 
 function list_item(){
-	for (var i = 0; i < items.length; i++) {
-		console.log('\x1b[33m%s\x1b[0m', items[i].item_id + '. ' + items[i].product_name + '\n Department: ' + items[i].department_name + '\n Price: ' + items[i].price + '   Stock: ' + items[i].stock_quantity);
-	}
-	add_item();
+	connection.query('SELECT item_id, product_name, department_name, price, stock_quantity FROM products', function (err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			for (var i = 0; i < data.length; i++) {
+				console.log('\x1b[33m%s\x1b[0m', data[i].item_id + '. ' + data[i].product_name + '\n Department: ' + data[i].department_name + '\n Price: ' + data[i].price + '\n Stock: ' + data[i].stock_quantity);
+			}
+			add_item();
+		}
+	});
 }
 
 function add_item(){
@@ -72,7 +74,7 @@ function add_item(){
 			}
 		}
 	]).then(function(value){
-		connection.query('SELECT item_id, product_name, department_name, price, stock_quantity FROM products WHERE item_id = ' + value.item_id, function(err, data) {
+		connection.query('SELECT item_id, department_name, price, stock_quantity, product_sales FROM products WHERE item_id = ' + value.item_id, function(err, data) {
 			if (err) {
 				console.log(err);
 			} else {
@@ -80,12 +82,28 @@ function add_item(){
 					console.log('\x1b[33m%s\x1b[0m', '\n Insufficient quantity. Only ' + data[0].stock_quantity + ' available.');
 					add_item();
 				} else {
-					var total = parseInt(data[0].price) * parseInt(value.quantity);
+					var total = parseFloat(data[0].price) * parseFloat(value.quantity);
 					var quantity_update = data[0].stock_quantity - value.quantity;
+					var sales_update = parseFloat(data[0].product_sales) + total;
 
+					// update stock
 					connection.query('UPDATE products SET stock_quantity = ' + quantity_update + ' WHERE item_id = ' + value.item_id);
-					console.log('\x1b[33m%s\x1b[0m', 'Your total is $' + total + '.');
+
+					// update sales
+					connection.query('UPDATE products SET product_sales = ' + sales_update + ' WHERE item_id = ' + value.item_id);
+
+					console.log('\x1b[33m%s\x1b[0m', 'Your total: $' + total);
 					continue_shopping();
+
+					// update department sales
+					connection.query('SELECT department_name, product_sales FROM departments WHERE department_name = "' + data[0].department_name + '"', function(err, data){
+						if (err) {
+							console.log(err);
+						} else {
+							var department_sales = data[0].product_sales + total;
+							connection.query('UPDATE departments SET product_sales = ' + department_sales + ' WHERE department_name = "' + data[0].department_name + '"');
+						}
+					});
 				}
 			}
 		});

@@ -67,4 +67,36 @@ USE bamazon;
 -- SET stock_quantity = 50
 -- WHERE item_id BETWEEN 5 AND 16; 
 
+-- SELECT * FROM products
+
+-- CREATE TABLE departments (
+-- 	department_id INT AUTO_INCREMENT;
+-- 	department_name VARCHAR(200) NOT NULL,
+-- 	over_head_costs DECIMAL(10,2) NOT NULL 
+-- )
+
+-- ALTER TABLE products
+-- ADD COLUMN product_sales DECIMAL(10,2) NOT DEFAULT 0.00;
+
+-- ALTER TABLE departments
+-- ADD COLUMN product_sales DECIMAL(10,2) NOT NULL DEFAULT 0.00
+
+-- INSERT INTO departments(department_name, over_head_costs, product_sales, total_profit)
+-- VALUES("Computer Science", 1000, 0, 0);
+
+-- INSERT INTO departments(department_name, over_head_costs, product_sales, total_profit)
+-- VALUES("Art & Design", 1000, 0, 0);
+-- 
+-- INSERT INTO departments(department_name, over_head_costs, product_sales, total_profit)
+-- VALUES("History", 1000, 0, 0);
+
+-- DELETE FROM departments
+-- WHERE department_id BETWEEN 4 AND 13;
+-- ALTER TABLE departments AUTO_INCREMENT = 4;
+
+-- UPDATE products
+-- SET stock_quantity = 50
+-- WHERE item_id BETWEEN 1 AND 20;
+
 SELECT * FROM products
+

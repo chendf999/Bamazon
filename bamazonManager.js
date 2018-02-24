@@ -13,35 +13,16 @@ const connection = mysql.createConnection({
 	database: "bamazon"
 });
 
-var items = [];
-
 var itemNum = 0;
-var items = [];
 
-connection.connect(function(err){
+connection.connect(function(err, data){
 	if (err) {
 		console.log(err);
 	} else {
-		shop_update();
+		itemNum = data.length;
 		shop_manager();
 	}
 });
-
-// import new data once database updates
-function shop_update(){
-	items = [];
-
-	connection.query('SELECT item_id, product_name, department_name, price, stock_quantity FROM products', function (err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-			itemNum = data.length;
-			for (var i = 0; i < data.length; i++) {
-				items.push(data[i]);
-			}
-		}
-	});
-}
 
 // print management options
 function shop_manager(){
@@ -71,10 +52,16 @@ function shop_manager(){
 }
 
 function list_item(){
-	for (var i = 0; i < items.length; i++) {
-		console.log('\x1b[33m%s\x1b[0m', items[i].item_id + '. ' + items[i].product_name + '\n Department: ' + items[i].department_name + '\n Price: ' + items[i].price + '\n Stock: ' + items[i].stock_quantity);
-	}
-	shop_manager();
+	connection.query('SELECT item_id, product_name, department_name, price, stock_quantity FROM products', function (err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			for (var i = 0; i < data.length; i++) {
+				console.log('\x1b[33m%s\x1b[0m', data[i].item_id + '. ' + data[i].product_name + '\n Department: ' + data[i].department_name + '\n Price: ' + data[i].price + '\n Stock: ' + data[i].stock_quantity);
+			}
+			shop_manager();
+		}
+	});
 }
 
 function low_inventory(){
@@ -85,14 +72,14 @@ function low_inventory(){
 			if (data.length === 0) {
 				console.log('\x1b[33m%s\x1b[0m', '\n No low inventory item found.');
 			} else {
+				console.log('\x1b[33m%s\x1b[0m', '\n Low inventory items: \n');
 				for (var i = 0; i < data.length; i++) {
-					console.log('\x1b[33m%s\x1b[0m', '\n Low inventory items:' + data[i].item_id + '. ' + data[i].product_name + '\n Department: ' + data[i].department_name + '\n Price: ' + data[i].price + '\n Stock: ' + data[i].stock_quantity);
+					console.log('\x1b[33m%s\x1b[0m', data[i].item_id + '. ' + data[i].product_name + '\n Department: ' + data[i].department_name + '\n Price: ' + data[i].price + '\n Stock: ' + data[i].stock_quantity);
 				}
+				shop_manager();
 			}
 		}
 	});
-	console.log('low');
-	shop_manager();
 }
 
 function add_stock(){
@@ -127,7 +114,7 @@ function add_stock(){
 			}
 		}
 	]).then(function(value){
-		connection.query('SELECT item_id, product_name, department_name, price, stock_quantity FROM products WHERE item_id = ' + value.id, function(err, data){
+		connection.query('SELECT * FROM products WHERE item_id = ' + value.id, function(err, data){
 			if (err) {
 				console.log(err);
 			} else {
@@ -138,7 +125,6 @@ function add_stock(){
 					} else {
 						console.log('\x1b[33m%s\x1b[0m', '\n Stock quantity changed: \n ' + data[0].item_id + '. ' + data[0].product_name + '\n Department: ' + data[0].department_name + '\n Price: ' + data[0].price + '\n Stock: ' + quantity_update);
 
-						shop_update();
 						shop_manager();
 					}
 				});
@@ -201,7 +187,7 @@ function new_product(){
 			} else {
 				console.log('\x1b[33m%s\x1b[0m', 'Item added: \n' + value.name + ' \n Department: ' + value.dept + '\n Price: ' + value.price + '\n Stock: ' + value.quantity);
 
-				shop_update();
+				itemNum++
 				shop_manager();
 			}
 		});

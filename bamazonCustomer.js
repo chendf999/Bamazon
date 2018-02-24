@@ -37,7 +37,7 @@ connection.connect(function(err){
 
 function list_item(){
 	for (var i = 0; i < items.length; i++) {
-		console.log(items[i].item_id + '. ' + items[i].product_name + '\n Department: ' + items[i].department_name + '\n Price: ' + items[i].price + '   Stock: ' + items[i].stock_quantity);
+		console.log('\x1b[33m%s\x1b[0m', items[i].item_id + '. ' + items[i].product_name + '\n Department: ' + items[i].department_name + '\n Price: ' + items[i].price + '   Stock: ' + items[i].stock_quantity);
 	}
 	add_item();
 }
@@ -53,7 +53,7 @@ function add_item(){
 				if(isNaN(value) === false && parseInt(value) > 0 && parseInt(value) <= itemNum){
 					return true
 				} else {
-					console.log('\n Input item id between 1-' + itemNum + '.');
+					console.log('\x1b[33m%s\x1b[0m', '\n Input item id between 1-' + itemNum + '.');
 					return false;
 				}
 			}
@@ -67,7 +67,7 @@ function add_item(){
 				if (!isNaN(value) && parseInt(value) > 0) {
 					return true;
 				} else {
-					console.log('Please enter a valid number.');
+					console.log('\x1b[33m%s\x1b[0m', 'Please enter a valid number.');
 				}
 			}
 		}
@@ -77,14 +77,14 @@ function add_item(){
 				console.log(err);
 			} else {
 				if (value.quantity > data[0].stock_quantity) {
-					console.log('\n Insufficient quantity. Only ' + data[0].stock_quantity + ' available.');
+					console.log('\x1b[33m%s\x1b[0m', '\n Insufficient quantity. Only ' + data[0].stock_quantity + ' available.');
 					add_item();
 				} else {
 					var total = parseInt(data[0].price) * parseInt(value.quantity);
 					var quantity_update = data[0].stock_quantity - value.quantity;
 
 					connection.query('UPDATE products SET stock_quantity = ' + quantity_update + ' WHERE item_id = ' + value.item_id);
-					console.log('Your total is $' + total + '.');
+					console.log('\x1b[33m%s\x1b[0m', 'Your total is $' + total + '.');
 					continue_shopping();
 				}
 			}
@@ -104,7 +104,7 @@ function continue_shopping(){
 		if (value.next === 'Yes, please.') {
 			list_item();
 		} else {
-			console.log('Thank you for shopping with us!');
+			console.log('\x1b[33m%s\x1b[0m', 'Thank you for shopping with us!');
 		}
 	});
 }

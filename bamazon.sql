@@ -65,6 +65,6 @@ USE bamazon;
 
 -- UPDATE products
 -- SET stock_quantity = 50
--- WHERE item_id BETWEEN 1 AND 16; 
+-- WHERE item_id BETWEEN 5 AND 16; 
 
 SELECT * FROM products

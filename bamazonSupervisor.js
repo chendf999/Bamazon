@@ -55,7 +55,8 @@ function view_sales(){
 					data[i].department_name,
 					data[i].over_head_costs,
 					data[i].product_sales,
-					data[i].over_head_costs - data[i].product_sales
+					// data[i].product_sales - data[i].over_head_costs
+					Math.floor(100*(data[i].product_sales - data[i].over_head_costs))/100
 				];
 
 				table.push(content);

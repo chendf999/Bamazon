@@ -76,8 +76,8 @@ function low_inventory(){
 				for (var i = 0; i < data.length; i++) {
 					console.log('\x1b[33m%s\x1b[0m', data[i].item_id + '. ' + data[i].product_name + '\n Department: ' + data[i].department_name + '\n Price: ' + data[i].price + '\n Stock: ' + data[i].stock_quantity);
 				}
-				shop_manager();
 			}
+			shop_manager();
 		}
 	});
 }

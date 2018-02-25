@@ -36,7 +36,7 @@ USE bamazon;
 -- VALUES ("Mapping Experiences: A Complete Guide to Creating Value through Journeys, Blueprints, and Diagrams", "Art & Design", 20.98, 2);
 -- 
 -- INSERT INTO products (product_name, department_name, price, stock_quantity)
--- VALUES ("Python Tricks: A Buffet of Awesome Python Features ", "History", 26.99, 5);
+-- VALUES ("Energy and Civilization: A History ", "History", 26.99, 5);
 -- 
 -- INSERT INTO products (product_name, department_name, price, stock_quantity)
 -- VALUES ("Command and Control: Nuclear Weapons, the Damascus Accident, and the Illusion of Safety", "History", 13.7, 1);
@@ -91,12 +91,12 @@ USE bamazon;
 -- VALUES("History", 1000, 0, 0);
 
 -- DELETE FROM departments
--- WHERE department_id BETWEEN 4 AND 13;
+-- WHERE department_id BETWEEN 4 AND 5;
 -- ALTER TABLE departments AUTO_INCREMENT = 4;
 
--- UPDATE products
--- SET stock_quantity = 50
--- WHERE item_id BETWEEN 1 AND 20;
+UPDATE products
+SET product_name = "Energy and Civilization: A History"
+WHERE item_id = 9;
 
 SELECT * FROM products
 
